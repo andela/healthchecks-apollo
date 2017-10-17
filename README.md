@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/andela/healthchecks-apollo.svg?branch=master)](https://travis-ci.org/andela/healthchecks-apollo)   
 [![Coverage Status](https://coveralls.io/repos/github/andela/healthchecks-apollo/badge.svg?branch=master)](https://coveralls.io/github/andela/healthchecks-apollo?branch=master)
 
 # healthchecks
