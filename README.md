@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/andela/healthchecks-apollo.svg?branch=master)](https://travis-ci.org/andela/healthchecks-apollo)   [![Coverage Status](https://coveralls.io/repos/github/andela/healthchecks-apollo/badge.svg?branch=master)](https://coveralls.io/github/andela/healthchecks-apollo?branch=master)   [![Codacy Badge](https://api.codacy.com/project/badge/Grade/94f4fda927384f339375be37c73399ac)](https://www.codacy.com/app/arnawldo/healthchecks-apollo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela/healthchecks-apollo&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/andela/healthchecks-apollo.svg?branch=master)](https://travis-ci.org/andela/healthchecks-apollo)
+[![Coverage Status](https://coveralls.io/repos/github/andela/healthchecks-apollo/badge.svg?branch=master)](https://coveralls.io/github/andela/healthchecks-apollo?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b24068d7c76b4607bb3ac805d30e4cc3)](https://www.codacy.com/app/EinsteinCarrey/healthchecks-apollo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela/healthchecks-apollo&amp;utm_campaign=Badge_Grade)
 
 # healthchecks
 
