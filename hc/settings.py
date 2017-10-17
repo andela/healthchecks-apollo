@@ -132,14 +132,6 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-<<<<<<< HEAD
-=======
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
-
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
->>>>>>> Add whitenoise package
 COMPRESS_OFFLINE = True
 
 
