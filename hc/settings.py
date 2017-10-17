@@ -97,15 +97,15 @@ if os.environ.get("Heroku") == 'TRUE':
 
 # You can switch database engine to postgres or mysql using environment
 # variable 'DB'. Travis CI does this.
-# if os.environ.get("DATABASE_URL") == "postgres":
-#     DATABASES = {
-#         'default': {
-#             'ENGINE':   'django.db.backends.postgresql',
-#             'NAME':     'hc',
-#             'USER':     'postgres',
-#             'TEST': {'CHARSET': 'UTF8'}
-#         }
-#     }
+if os.environ.get("DB") == "postgres":
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql',
+            'NAME':     'hc',
+            'USER':     'postgres',
+            'TEST': {'CHARSET': 'UTF8'}
+        }
+    }
 
 db_from_env = dj_database_url.config()
 DATABASES['default'].update(db_from_env)
