@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/andela/healthchecks-apollo/badge.svg?branch=master)](https://coveralls.io/github/andela/healthchecks-apollo?branch=master)
+
 # healthchecks
 
 ![Screenshot of Welcome page](/stuff/screenshots/welcome.png?raw=true "Welcome Page")
