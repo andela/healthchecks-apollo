@@ -133,6 +133,10 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+
+
+
+
 COMPRESS_OFFLINE = True
 
 
