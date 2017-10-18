@@ -43,6 +43,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -103,8 +104,10 @@ if os.environ.get("DB") == "postgres":
         }
     }
 
-db_from_env = dj_database_url.config()
-DATABASES['default'].update(db_from_env)
+if os.environ.get("Heroku") == 'TRUE':
+    db_from_env = dj_database_url.config()
+    DATABASES['default'].update(db_from_env)
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 if os.environ.get("DB") == "mysql":
     DATABASES = {
@@ -138,10 +141,9 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-# Simplified static file serving.
-# https://warehouse.python.org/project/whitenoise/
 
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
 
 COMPRESS_OFFLINE = True
 
