@@ -8,5 +8,4 @@ static-collected
 .env
 .DS_Store
 static/.DS_Store
-.env
 .idea/
