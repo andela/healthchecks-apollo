@@ -87,6 +87,16 @@ DATABASES = {
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+if os.environ.get("TRAVIS") == "TRUE":
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql',
+            'NAME':     'hc',
+            'USER':     'postgres',
+            'TEST': {'CHARSET': 'UTF8'}
+        }
+    }
+
 
 LANGUAGE_CODE = 'en-us'
 
