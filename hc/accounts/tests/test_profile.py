@@ -7,6 +7,16 @@ from django.core import mail
 
 
 class ProfileTestCase(BaseTestCase):
+    def assert_mail_sent_and_content(self, subject, content):
+        """
+        This method asserts that an email was sent and checks the email content using the subject and content params
+        :param subject: subject line of the email sent out
+        :param content: the content in the body
+        :return: none
+        """
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertIn(content, mail.outbox[0].body)
 
     def test_it_sends_set_password_link(self):
         self.client.login(username="alice@example.org", password="password")
@@ -27,9 +37,8 @@ class ProfileTestCase(BaseTestCase):
         self.assertNotEquals(token, None)
 
         # Assert that the email was sent and check email content
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, 'Subject here')
-        self.assertIn(mail.outbox[0].body, 'body here')
+        self.assert_mail_sent_and_content('Set password on healthchecks.io', "Here's a link to set a password for your account on healthchecks.io:")
+
 
 
     def test_it_sends_report(self):
