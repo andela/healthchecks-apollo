@@ -47,7 +47,8 @@ class ProfileTestCase(BaseTestCase):
 
         self.alice.profile.send_report()
 
-        ###Assert that the email was sent and check email content
+        # Assert that the email was sent and check email content
+        self.assert_mail_sent_and_content("Monthly Report", "This is a monthly report sent by healthchecks.io.")
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
@@ -60,7 +61,8 @@ class ProfileTestCase(BaseTestCase):
         for member in self.alice.profile.member_set.all():
             member_emails.add(member.user.email)
 
-        ### Assert the existence of the member emails
+        # Assert the existence of the member emails
+        self.assertTrue(member_emails.__contains__("frank@example.org"))
 
         self.assertTrue("frank@example.org" in member_emails)
 
