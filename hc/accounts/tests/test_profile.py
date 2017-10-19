@@ -3,12 +3,17 @@ from django.core import mail
 from hc.test import BaseTestCase
 from hc.accounts.models import Member
 from hc.api.models import Check
+from django.core import mail
 
 
 class ProfileTestCase(BaseTestCase):
 
     def test_it_sends_set_password_link(self):
         self.client.login(username="alice@example.org", password="password")
+
+        # manually empty mail box
+        mail.outbox = []
+        self.assertEqual(len(mail.outbox), 0)  # Assert that mail box  is empty
 
         form = {"set_password": "1"}
         r = self.client.post("/accounts/profile/", form)
@@ -17,10 +22,15 @@ class ProfileTestCase(BaseTestCase):
         # profile.token should be set now
         self.alice.profile.refresh_from_db()
         token = self.alice.profile.token
-        ### Assert that the token is set
-        self.assertIsInstance(token, str)
 
-        ### Assert that the email was sent and check email content
+        # Assert that the token is set
+        self.assertNotEquals(token, None)
+
+        # Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Subject here')
+        self.assertIn(mail.outbox[0].body, 'body here')
+
 
     def test_it_sends_report(self):
         check = Check(name="Test Check", user=self.alice)
