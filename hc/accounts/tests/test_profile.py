@@ -19,7 +19,7 @@ class ProfileTestCase(BaseTestCase):
         self.assertIn(content, mail.outbox[0].body)
 
     def test_it_sends_set_password_link(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(username=self.alice.email, password="password")
 
         # manually empty mail box
         mail.outbox = []
@@ -51,7 +51,7 @@ class ProfileTestCase(BaseTestCase):
         self.assert_mail_sent_and_content("Monthly Report", "This is a monthly report sent by healthchecks.io.")
 
     def test_it_adds_team_member(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(username=self.alice.email, password="password")
 
         form = {"invite_team_member": "1", "email": "frank@example.org"}
         r = self.client.post("/accounts/profile/", form)
@@ -62,25 +62,26 @@ class ProfileTestCase(BaseTestCase):
             member_emails.add(member.user.email)
 
         # Assert the existence of the member emails
-        self.assertTrue(member_emails.__contains__("frank@example.org"))
+        # assertContains only works on HTTPResponse objects. Use assertIn for other objects
+        self.assertIn("frank@example.org", member_emails)
 
         self.assertTrue("frank@example.org" in member_emails)
 
         # Assert that the email was sent and check email content
-        self.assert_mail_sent_and_content("You have been invited to join alice@example.org on healthchecks.io",
-                                          "alice@example.org invites you to their healthchecks.io account.")
+        self.assert_mail_sent_and_content("You have been invited to join "+self.alice.email+" on healthchecks.io",
+                                          ""+self.alice.email+" invites you to their healthchecks.io account.")
 
     def test_add_team_member_checks_team_access_allowed_flag(self):
-        self.client.login(username="charlie@example.org", password="password")
+        self.client.login(username=self.charlie.email, password="password")
 
         form = {"invite_team_member": "1", "email": "frank@example.org"}
         r = self.client.post("/accounts/profile/", form)
         assert r.status_code == 403
 
     def test_it_removes_team_member(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(username=self.alice.email, password="password")
 
-        form = {"remove_team_member": "1", "email": "bob@example.org"}
+        form = {"remove_team_member": "1", "email": self.bob.email}
         r = self.client.post("/accounts/profile/", form)
         assert r.status_code == 200
 
@@ -90,7 +91,7 @@ class ProfileTestCase(BaseTestCase):
         self.assertEqual(self.bobs_profile.current_team, None)
 
     def test_it_sets_team_name(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(username=self.alice.email, password="password")
 
         form = {"set_team_name": "1", "team_name": "Alpha Team"}
         r = self.client.post("/accounts/profile/", form)
@@ -107,7 +108,7 @@ class ProfileTestCase(BaseTestCase):
         assert r.status_code == 403
 
     def test_it_switches_to_own_team(self):
-        self.client.login(username="bob@example.org", password="password")
+        self.client.login(username=self.bob.email, password="password")
 
         self.client.get("/accounts/profile/")
 
@@ -117,7 +118,7 @@ class ProfileTestCase(BaseTestCase):
         self.assertEqual(self.bobs_profile.current_team, self.bobs_profile)
 
     def test_it_shows_badges(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(username=self.alice.email, password="password")
         Check.objects.create(user=self.alice, tags="foo a-B_1  baz@")
         Check.objects.create(user=self.bob, tags="bobs-tag")
 
@@ -133,7 +134,7 @@ class ProfileTestCase(BaseTestCase):
 
     # Test it creates and revokes API key
     def test_it_creates_and_revokes_api_key(self):
-        self.client.login(username="alice@example.org", password="password")
+        self.client.login(username=self.alice.email, password="password")
 
         form = {"create_api_key": "1"}
         r = self.client.post("/accounts/profile/", form)

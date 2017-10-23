@@ -23,7 +23,7 @@ class CheckTokenTestCase(BaseTestCase):
 
     # Login and test it redirects already logged in
     def test_login_and_redirect(self):
-        form = {"email": "alice@example.org", "password": "password"}
+        form = {"email": self.alice.email, "password": "password"}
         r = self.client.post("/accounts/login/", form)
 
         self.assertRedirects(r, "/checks/")
