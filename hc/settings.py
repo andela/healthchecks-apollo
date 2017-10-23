@@ -80,9 +80,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'hc.wsgi.application'
 TEST_RUNNER = 'hc.api.tests.CustomRunner'
 
-DATABASES = {
-    'default': dj_database_url.config()
-}
+DATABASES = {}
 
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
@@ -96,6 +94,10 @@ if os.environ.get("TRAVIS") == "TRUE":
             'TEST': {'CHARSET': 'UTF8'}
         }
     }
+else:
+   DATABASES = {
+       'default': dj_database_url.config()
+   }
 
 
 LANGUAGE_CODE = 'en-us'
