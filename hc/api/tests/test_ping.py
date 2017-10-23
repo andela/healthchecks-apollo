@@ -1,9 +1,9 @@
-from django.test import Client, TestCase
-
+from hc.test import BaseTestCase
+from django.test import Client
 from hc.api.models import Check, Ping
 
 
-class PingTestCase(TestCase):
+class PingTestCase(BaseTestCase):
 
     def setUp(self):
         super(PingTestCase, self).setUp()
@@ -50,6 +50,8 @@ class PingTestCase(TestCase):
                             HTTP_X_FORWARDED_FOR=ip)
         ping = Ping.objects.latest("id")
         ### Assert the expected response status code and ping's remote address
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(ping.remote_addr, "1.1.1.1")
 
         ip = "1.1.1.1, 2.2.2.2"
         r = self.client.get("/ping/%s/" % self.check.code,
@@ -63,11 +65,39 @@ class PingTestCase(TestCase):
                             HTTP_X_FORWARDED_PROTO="https")
         ping = Ping.objects.latest("id")
         ### Assert the expected response status code and ping's scheme
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(ping.scheme, "https")
 
     def test_it_never_caches(self):
         r = self.client.get("/ping/%s/" % self.check.code)
         assert "no-cache" in r.get("Cache-Control")
 
     ### Test that when a ping is made a check with a paused status changes status
+    def test_it_changes_status(self):
+
+        # create a paused check
+        check = Check(user=self.alice, status="paused")
+        check.save()
+
+        # make a ping to paused check
+        self.client.get("/ping/%s/" % check.code)
+
+        # assert status changed to active
+        check.refresh_from_db()
+        self.assertEqual(check.status, "up")
+
+
+
     ### Test that a post to a ping works
+    def test_it_accepts_post_requests(self):
+        r = self.client.post("/ping/%s/" % self.check.code)
+        assert r.status_code == 200
+
     ### Test that the csrf_client head works
+    def test_csrf_clients_work(self):
+        # create a csrf client
+        csrf_client = Client(enforce_csrf_checks=True)
+
+        r = csrf_client.get("/ping/%s/" % self.check.code)
+        assert r.status_code == 200
+
