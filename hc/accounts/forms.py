@@ -14,7 +14,7 @@ class EmailPasswordForm(forms.Form):
 
 
 class ReportSettingsForm(forms.Form):
-    reports_allowed = forms.BooleanField(required=False)
+    report_period = forms.IntegerField(required=False)
 
 
 class SetPasswordForm(forms.Form):
