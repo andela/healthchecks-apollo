@@ -44,6 +44,20 @@ class ProfileTestCase(BaseTestCase):
         # Assert that the email was sent and check email content
         self.assert_mail_sent_and_content("Monthly Report", "This is a monthly report sent by healthchecks.io.")
 
+    def test_selected_periodic_report(self):
+        """This test asserts that the period selected by the user is saved on their profile"""
+        self.client.login(username=self.alice.email, password="password")
+
+        form = {"update_reports_period": "1", "report_period": "2"}
+        r = self.client.post("/accounts/profile/", form)
+        assert r.status_code == 200
+
+        # assert that the report period has changed from the default monthly to weekly as selected in this test
+        self.alice.profile.refresh_from_db()
+        period = self.alice.profile.report_period
+        self.assertEqual(period, 2)
+
+
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
 
