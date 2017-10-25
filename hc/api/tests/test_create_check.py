@@ -16,7 +16,7 @@ class CreateCheckTestCase(BaseTestCase):
 
         if expected_error:
             self.assertEqual(r.status_code, 400)
-            self.assertIn(bytes(expected_error, encoding='utf-8'), r.content)
+            self.assertIn(expected_error, r.content.decode())
             ### Assert that the expected error is the response error
 
         return r
