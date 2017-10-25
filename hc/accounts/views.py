@@ -153,10 +153,10 @@ def profile(request):
             messages.info(request, "The API key has been revoked!")
         elif "show_api_key" in request.POST:
             show_api_key = True
-        elif "update_reports_allowed" in request.POST:
+        elif "update_reports_period" in request.POST:
             form = ReportSettingsForm(request.POST)
             if form.is_valid():
-                profile.reports_allowed = form.cleaned_data["reports_allowed"]
+                profile.report_period = form.cleaned_data["report_period"]
                 profile.save()
                 messages.success(request, "Your settings have been updated!")
         elif "update_reports_period" in request.POST:
