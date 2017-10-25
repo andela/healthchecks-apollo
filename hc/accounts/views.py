@@ -164,6 +164,11 @@ def profile(request):
                 else:
                     profile.report_period = period
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
+
+        elif "update_reports_period" in request.POST:
+            form = ReportSettingsForm(request.POST)
+            if form.is_valid():
+                profile.report_period = form.cleaned_data["report_period"]
                 profile.save()
                 messages.success(request, "Your settings have been updated!")
         elif "invite_team_member" in request.POST:
