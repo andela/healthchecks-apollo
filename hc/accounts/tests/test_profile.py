@@ -95,6 +95,12 @@ class ProfileTestCase(BaseTestCase):
         self.client.login(username=self.alice.email, password="password")
 
         form = {"update_reports": "1", "report_period": "2", "reports_allowed": "1"}
+
+    def test_selected_periodic_report(self):
+        """This test asserts that the period selected by the user is saved on their profile"""
+        self.client.login(username=self.alice.email, password="password")
+
+        form = {"update_reports_period": "1", "report_period": "2"}
         r = self.client.post("/accounts/profile/", form)
         assert r.status_code == 200
 
