@@ -2,6 +2,7 @@ import json
 
 from hc.api.models import Channel, Check
 from hc.test import BaseTestCase
+from mock import patch
 
 
 class CreateCheckTestCase(BaseTestCase):
@@ -60,36 +61,12 @@ class CreateCheckTestCase(BaseTestCase):
         r = self.post({}, expected_error="wrong api_key")
         self.assertEqual(r.status_code, 400)
 
-    def test_it_handles_invalid_json(self):
+    @patch("json.loads")
+    def test_it_handles_invalid_json(self, mock_json_loads):
         ### Make the post request with invalid json data type
-        r = self.post({"api_key": "abc", "name": 77}, expected_error="name is not a string")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "tags": 77}, expected_error="tags is not a string")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "timeout": "wrong_type"}, expected_error="timeout is not a number")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "timeout": 10}, expected_error="timeout is too small")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "timeout": 700000}, expected_error="timeout is too large")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "grace": "wrong_type"}, expected_error="grace is not a number")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "grace": 10}, expected_error="grace is too small")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "grace": 700000}, expected_error="grace is too large")
-        self.assertEqual(r.status_code, 400)
-
-        r = self.post({"api_key": "abc", "channels": 77}, expected_error="channels is not a string")
-        self.assertEqual(r.status_code, 400)
-
-
+        mock_json_loads.side_effect = ValueError()
+        self.post({"api_key": "abc"},
+                  expected_error="could not parse request body")
 
     def test_it_rejects_wrong_api_key(self):
         self.post({"api_key": "wrong"},
@@ -99,9 +76,38 @@ class CreateCheckTestCase(BaseTestCase):
         self.post({"api_key": "abc", "timeout": "oops"},
                   expected_error="timeout is not a number")
 
+    def test_it_rejects_too_small_timeout(self):
+        self.post({"api_key": "abc", "timeout": 10},
+                  expected_error="timeout is too small")
+
+    def test_it_rejects_too_large_timeout(self):
+        self.post({"api_key": "abc", "timeout": 700000},
+                  expected_error="timeout is too large")
+
+    def test_it_rejects_non_number_grace(self):
+        self.post({"api_key": "abc", "grace": "oops"},
+                  expected_error="grace is not a number")
+
+    def test_it_rejects_too_small_grace(self):
+        self.post({"api_key": "abc", "grace": 10},
+                  expected_error="grace is too small")
+
+    def test_it_rejects_too_large_grace(self):
+        self.post({"api_key": "abc", "grace": 700000},
+                  expected_error="grace is too large")
+
     def test_it_rejects_non_string_name(self):
         self.post({"api_key": "abc", "name": False},
                   expected_error="name is not a string")
+
+    def test_it_rejects_non_string_channels(self):
+        self.post({"api_key": "abc", "channels": False},
+                  expected_error="channels is not a string")
+
+    def test_it_rejects_non_string_tags(self):
+        self.post({"api_key": "abc", "tags": False},
+                  expected_error="tags is not a string")
+
 
     ### Test for the assignment of channels
     def test_assign_channels(self):
