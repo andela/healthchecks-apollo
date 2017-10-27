@@ -4,7 +4,10 @@ __pycache__/
 hc.sqlite
 hc/local_settings.py
 static-collected
+.env
 
 .DS_Store
 static/.DS_Store
-.env
+
+Tasklist
+venv/
