@@ -1,3 +1,7 @@
+autoenv==1.0.0
+boto==2.48.0
+cssselect==1.0.1
+cssutils==1.0.2
 boto==2.48.0
 cssselect==1.0.1
 cssutils==1.0.2
