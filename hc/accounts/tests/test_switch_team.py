@@ -8,13 +8,12 @@ class SwitchTeamTestCase(BaseTestCase):
         c = Check(user=self.alice, name="This belongs to Alice")
         c.save()
 
-        self.client.login(username=self.bob.email, password="password")
+        self.client.login(username="bob@example.org", password="password")
 
         url = "/accounts/switch_team/%s/" % self.alice.username
         r = self.client.get(url, follow=True)
 
-        # Assert the contents of r
-        self.assertRedirects(r, "/checks/")
+        ### Assert the contents of r
 
 
     def test_it_checks_team_membership(self):
@@ -22,13 +21,11 @@ class SwitchTeamTestCase(BaseTestCase):
 
         url = "/accounts/switch_team/%s/" % self.alice.username
         r = self.client.get(url)
-        # Assert the expected error code
-        assert r.status_code == 403
+        ### Assert the expected error code
 
     def test_it_switches_to_own_team(self):
-        self.client.login(username=self.alice.email, password="password")
+        self.client.login(username="alice@example.org", password="password")
 
         url = "/accounts/switch_team/%s/" % self.alice.username
         r = self.client.get(url, follow=True)
-        # Assert the expected error code
-        assert r.status_code == 200
+        ### Assert the expected error code
