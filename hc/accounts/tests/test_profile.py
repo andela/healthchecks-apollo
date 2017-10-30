@@ -146,5 +146,5 @@ class ProfileTestCase(BaseTestCase):
         # profile.api_key should be set none
         self.alice.profile.refresh_from_db()
         api_key = self.alice.profile.api_key
-        # Assert the api key is none
+        # Assert the api key is an empty string
         self.assertEqual(api_key, "")
