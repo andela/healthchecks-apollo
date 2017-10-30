@@ -61,7 +61,9 @@ class ProfileTestCase(BaseTestCase):
 
         self.assertTrue("frank@example.org" in member_emails)
 
-        ###Assert that the email was sent and check email content
+        # Assert that the email was sent and check email content
+        self.assert_mail_sent_and_content("You have been invited to join " + self.alice.email + " on healthchecks.io",
+                                          "" + self.alice.email + " invites you to their healthchecks.io account.")
 
     def test_add_team_member_checks_team_access_allowed_flag(self):
         self.client.login(username="charlie@example.org", password="password")
