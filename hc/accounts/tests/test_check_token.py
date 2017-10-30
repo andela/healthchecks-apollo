@@ -28,6 +28,9 @@ class CheckTokenTestCase(BaseTestCase):
 
         self.assertRedirects(r, "/checks/")
 
-    ### Login with a bad token and check that it redirects
+    # Login with a bad token and check that it redirects
+    def test_login_with_bad_token_and_redirects(self):
+        r = self.client.post("/accounts/check_token/alice/bad-token/")
+        self.assertRedirects(r, "/accounts/login/")
 
     ### Any other tests?
