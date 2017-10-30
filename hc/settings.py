@@ -91,7 +91,7 @@ DATABASES = {}
 
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    SITE_ROOT = "https://healthchecks-apollo.herokuapp.com"
+
 
 # You can switch database engine to postgres or mysql using environment
 # variable 'DB'. Travis CI does this.
@@ -120,7 +120,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_ROOT = "http://localhost:8000"
+SITE_ROOT = os.getenv('SITE_ROOT')
 PING_ENDPOINT = SITE_ROOT + "/ping/"
 PING_EMAIL_DOMAIN = HOST
 STATIC_URL = '/static/'
