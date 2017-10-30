@@ -90,7 +90,7 @@ DATABASES = {}
 
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    SITE_ROOT = "https://healthchecks-apollo.herokuapp.com"
+
 
 
 # You can switch database engine to postgres or mysql using environment
