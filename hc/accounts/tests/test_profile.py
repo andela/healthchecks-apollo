@@ -29,7 +29,7 @@ class ProfileTestCase(BaseTestCase):
         token = self.alice.profile.token
 
         #  Assert that the token is set
-        self.assertNotEquals(token, None)
+        self.assertIsNotNone(token)
 
         # Assert that the email was sent and check email content
         self.assert_mail_sent_and_content('Set password on healthchecks.io',
