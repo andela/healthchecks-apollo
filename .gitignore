@@ -3,9 +3,9 @@ __pycache__/
 .coverage
 hc.sqlite
 .vscode/
-.env
 hc/local_settings.py
 static-collected
+.env
 .DS_Store
 static/.DS_Store
 .env
