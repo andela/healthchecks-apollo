@@ -6,6 +6,9 @@ hc.sqlite
 .env
 hc/local_settings.py
 static-collected
+.env
 
 .DS_Store
 static/.DS_Store
+Tasklist
+venv/
