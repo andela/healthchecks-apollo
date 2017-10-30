@@ -89,6 +89,7 @@ DATABASES = {}
 
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    SITE_ROOT = "https://healthchecks-apollo.herokuapp.com"
 
 
 
@@ -104,8 +105,7 @@ if os.environ.get("DB") == "postgres":
             'TEST': {'CHARSET': 'UTF8'}
         }
     }
-
-if os.environ.get("DB") == "mysql":
+else:
     DATABASES = {
         'default': dj_database_url.config()
     }
