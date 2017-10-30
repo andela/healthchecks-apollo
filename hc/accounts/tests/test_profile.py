@@ -6,6 +6,16 @@ from hc.api.models import Check
 
 
 class ProfileTestCase(BaseTestCase):
+    def assert_mail_sent_and_content(self, subject, content):
+        """
+        This method asserts that an email was sent and checks the email content using the subject and content params
+        :param subject: subject line of the email sent out
+        :param content: the content in the body
+        :return: none
+        """
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertIn(content, mail.outbox[0].body)
 
     def test_it_sends_set_password_link(self):
         self.client.login(username="alice@example.org", password="password")
@@ -31,7 +41,8 @@ class ProfileTestCase(BaseTestCase):
 
         self.alice.profile.send_report()
 
-        ###Assert that the email was sent and check email content
+        # Assert that the email was sent and check email content
+        self.assert_mail_sent_and_content("Monthly Report", "This is a monthly report sent by healthchecks.io.")
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
@@ -44,7 +55,7 @@ class ProfileTestCase(BaseTestCase):
         for member in self.alice.profile.member_set.all():
             member_emails.add(member.user.email)
 
-        ### Assert the existence of the member emails
+        ###Assert the existence of the member emails
 
         self.assertTrue("frank@example.org" in member_emails)
 
