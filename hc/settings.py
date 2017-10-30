@@ -91,6 +91,7 @@ DATABASES = {}
 
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    SITE_ROOT = "https://healthchecks-apollo.herokuapp.com"
 
 if os.environ.get("TRAVIS") == "TRUE":
     DATABASES = {
@@ -102,9 +103,9 @@ if os.environ.get("TRAVIS") == "TRUE":
         }
     }
 else:
-   DATABASES = {
-       'default': dj_database_url.config()
-   }
+    DATABASES = {
+        'default': dj_database_url.config()
+    }
 
 
 LANGUAGE_CODE = 'en-us'
