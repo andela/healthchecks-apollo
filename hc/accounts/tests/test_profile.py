@@ -55,7 +55,9 @@ class ProfileTestCase(BaseTestCase):
         for member in self.alice.profile.member_set.all():
             member_emails.add(member.user.email)
 
-        ###Assert the existence of the member emails
+        # Assert the existence of the member emails
+        # assertContains only works on HTTPResponse objects. Use assertIn for other objects
+        self.assertIn("frank@example.org", member_emails)
 
         self.assertTrue("frank@example.org" in member_emails)
 
