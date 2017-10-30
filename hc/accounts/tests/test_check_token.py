@@ -21,7 +21,12 @@ class CheckTokenTestCase(BaseTestCase):
         self.profile.refresh_from_db()
         self.assertEqual(self.profile.token, "")
 
-    ### Login and test it redirects already logged in
+    # Login and test it redirects already logged in
+    def test_login_and_redirect(self):
+        form = {"email": self.alice.email, "password": "password"}
+        r = self.client.post("/accounts/login/", form)
+
+        self.assertRedirects(r, "/checks/")
 
     ### Login with a bad token and check that it redirects
 
