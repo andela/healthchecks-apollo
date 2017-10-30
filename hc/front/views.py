@@ -14,7 +14,7 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
-from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
+from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping, Notification
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
                             TimeoutForm)
 
@@ -552,3 +552,35 @@ def privacy(request):
 
 def terms(request):
     return render(request, "front/terms.html", {})
+
+
+@login_required
+def unresolved_issues(request):
+    q = Check.objects.filter(user=request.team.user).order_by("created")
+    checks = list(q)
+
+    counter = Counter()
+    down_tags, grace_tags = set(), set()
+    unresolved_checks = []
+    for check in checks:
+        status = check.get_status()
+        if check.last_ping:
+            if check.last_ping + check.timeout + check.grace < timezone.now():
+                unresolved_checks.append(check)
+                if status == "down":
+                    for tag in check.tags_list():
+                        if tag == "":
+                            continue
+                        counter[tag] += 1
+                        down_tags.add(tag)
+    ctx = {
+        "page": "unresolved",
+        "checks": unresolved_checks,
+        "now": timezone.now(),
+        "tags": counter.most_common(),
+        "down_tags": down_tags,
+        "grace_tags": grace_tags,
+        "ping_endpoint": settings.PING_ENDPOINT
+    }
+
+    return render(request, "front/unresolved.html", ctx)
