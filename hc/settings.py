@@ -89,7 +89,7 @@ DATABASES = {}
 
 if os.environ.get("Heroku") == 'TRUE':
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    SITE_ROOT = "https://healthchecks-apollo.herokuapp.com"
+
 
 
 
