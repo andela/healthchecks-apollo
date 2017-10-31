@@ -68,7 +68,7 @@ class Profile(models.Model):
         token = signing.Signer().sign(uuid.uuid4())
         path = reverse("hc-unsubscribe-reports", args=[self.user.username])
         unsub_link = "%s%s?token=%s" % (settings.SITE_ROOT, path, token)
-        periods = ['monthly', 'weekly', 'daily']
+        periods = ['Monthly', 'Weekly', 'Daily']
         ctx = {
             "checks": self.user.check_set.order_by("created"),
             "now": now,
