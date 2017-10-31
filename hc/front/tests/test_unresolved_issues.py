@@ -24,4 +24,3 @@ class UnresolvedIssuesTestCase(BaseTestCase):
 
         # Mobile
         self.assertContains(r, "label-danger")
-        
