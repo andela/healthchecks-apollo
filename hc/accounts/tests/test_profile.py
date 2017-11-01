@@ -35,7 +35,7 @@ class ProfileTestCase(BaseTestCase):
         self.assert_mail_sent_and_content('Set password on healthchecks.io',
                                           "Here's a link to set a password for your account on healthchecks.io:")
 
-    def test_it_sends_report(self):
+    def test_it_sends_monthly_report(self):
         check = Check(name="Test Check", user=self.alice)
         check.save()
 
@@ -44,11 +44,57 @@ class ProfileTestCase(BaseTestCase):
         # Assert that the email was sent and check email content
         self.assert_mail_sent_and_content("Monthly Report", "This is a monthly report sent by healthchecks.io.")
 
+    def test_it_sends_weekly_report(self):
+        check = Check(name="Test Check", user=self.alice)
+        check.save()
+
+        self.profile.report_period = 1
+        self.alice.profile.send_report()
+
+        # Assert that the email was sent and check email content
+        self.assert_mail_sent_and_content("Weekly Report", "This is a weekly report sent by healthchecks.io.")
+
+    def test_it_sends_daily_report(self):
+        check = Check(name="Test Check", user=self.alice)
+        check.save()
+
+        self.profile.report_period = 2
+        self.alice.profile.send_report()
+
+        # Assert that the email was sent and check email content
+        self.assert_mail_sent_and_content("Daily Report", "This is a daily report sent by healthchecks.io.")
+
     def test_selected_periodic_report(self):
-        """This test asserts that the period selected by the user is saved on their profile"""
+        """This test asserts that the user has selected to receive monthly reports on their profile"""
         self.client.login(username=self.alice.email, password="password")
 
-        form = {"update_reports": "1", "report_period": "2", "reports_allowed": "0"}
+        form = {"update_reports": "1", "report_period": "0", "reports_allowed": "1"}
+        r = self.client.post("/accounts/profile/", form)
+        assert r.status_code == 200
+
+        # assert that the report period has changed from the default monthly to weekly as selected in this test
+        self.alice.profile.refresh_from_db()
+        period = self.alice.profile.report_period
+        self.assertEqual(period, 0)
+
+    def test_weekly_periodic_report_selected(self):
+        """This test asserts that the user has selected to receive weekly reports on their profile"""
+        self.client.login(username=self.alice.email, password="password")
+
+        form = {"update_reports": "1", "report_period": "1", "reports_allowed": "1"}
+        r = self.client.post("/accounts/profile/", form)
+        assert r.status_code == 200
+
+        # assert that the report period has changed from the default monthly to weekly as selected in this test
+        self.alice.profile.refresh_from_db()
+        period = self.alice.profile.report_period
+        self.assertEqual(period, 1)
+
+    def test_daily_periodic_report_selected(self):
+        """This test asserts that the user has selected to receive daily reports on their profile"""
+        self.client.login(username=self.alice.email, password="password")
+
+        form = {"update_reports": "1", "report_period": "2", "reports_allowed": "1"}
         r = self.client.post("/accounts/profile/", form)
         assert r.status_code == 200
 
