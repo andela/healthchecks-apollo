@@ -5,7 +5,13 @@ hc.sqlite
 .vscode/
 hc/local_settings.py
 static-collected
+<<<<<<< HEAD
 .env
 .DS_Store
 static/.DS_Store
+=======
+.DS_Store
+static/.DS_Store
+.env
+>>>>>>> [Chore #152238709]Resolve conflicts
 .idea/
