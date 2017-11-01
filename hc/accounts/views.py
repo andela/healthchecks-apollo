@@ -156,7 +156,13 @@ def profile(request):
         elif "update_reports" in request.POST:
             form = ReportSettingsForm(request.POST)
             if form.is_valid():
-                profile.report_period = form.cleaned_data["report_period"]
+                period = form.cleaned_data["report_period"]
+                if period is None:
+                    # here is when the user does not select a period in the config dialog, put monthly reports, the
+                    # default
+                    profile.report_period = 0
+                else:
+                    profile.report_period = period
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
                 profile.save()
                 messages.success(request, "Your settings have been updated!")
