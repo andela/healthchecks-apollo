@@ -97,10 +97,36 @@ class ProfileTestCase(BaseTestCase):
         form = {"update_reports": "1", "report_period": "2", "reports_allowed": "1"}
 
     def test_selected_periodic_report(self):
-        """This test asserts that the period selected by the user is saved on their profile"""
+        """This test asserts that the user has selected to receive monthly reports on their profile"""
         self.client.login(username=self.alice.email, password="password")
 
-        form = {"update_reports": "1", "report_period": "2", "reports_allowed": "0"}
+        form = {"update_reports": "1", "report_period": "0", "reports_allowed": "1"}
+        r = self.client.post("/accounts/profile/", form)
+        assert r.status_code == 200
+
+        # assert that the report period has changed from the default monthly to weekly as selected in this test
+        self.alice.profile.refresh_from_db()
+        period = self.alice.profile.report_period
+        self.assertEqual(period, 0)
+
+    def test_weekly_periodic_report_selected(self):
+        """This test asserts that the user has selected to receive weekly reports on their profile"""
+        self.client.login(username=self.alice.email, password="password")
+
+        form = {"update_reports": "1", "report_period": "1", "reports_allowed": "1"}
+        r = self.client.post("/accounts/profile/", form)
+        assert r.status_code == 200
+
+        # assert that the report period has changed from the default monthly to weekly as selected in this test
+        self.alice.profile.refresh_from_db()
+        period = self.alice.profile.report_period
+        self.assertEqual(period, 1)
+
+    def test_daily_periodic_report_selected(self):
+        """This test asserts that the user has selected to receive daily reports on their profile"""
+        self.client.login(username=self.alice.email, password="password")
+
+        form = {"update_reports": "1", "report_period": "2", "reports_allowed": "1"}
         r = self.client.post("/accounts/profile/", form)
         assert r.status_code == 200
 
