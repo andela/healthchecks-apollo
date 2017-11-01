@@ -26,7 +26,8 @@ class CreateCheckTestCase(BaseTestCase):
             "name": "Foo",
             "tags": "bar,baz",
             "timeout": 3600,
-            "grace": 60
+            "grace": 60,
+            "nag": 60
         })
 
         self.assertEqual(r.status_code, 201)
@@ -44,6 +45,7 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(check.tags, "bar,baz")
         self.assertEqual(check.timeout.total_seconds(), 3600)
         self.assertEqual(check.grace.total_seconds(), 60)
+        self.assertEqual(check.nag.total_seconds(), 60)
 
     def test_it_accepts_api_key_in_header(self):
         payload = json.dumps({"name": "Foo"})
@@ -72,6 +74,10 @@ class CreateCheckTestCase(BaseTestCase):
     def test_it_rejects_non_number_timeout(self):
         self.post({"api_key": "abc", "timeout": "oops"},
                   expected_error="timeout is not a number")
+
+    def test_it_rejects_non_number_nag(self):
+        self.post({"api_key": "abc", "nag": "oops"},
+                  expected_error="nag is not a number")
 
     def test_it_rejects_non_string_name(self):
         self.post({"api_key": "abc", "name": False},
