@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load compress staticfiles %}
 
-{% block title %}My Checks - healthchecks.io{% endblock %}
+{% block title %}Unresolved - healthchecks.io{% endblock %}
 
 
 {% block content %}
@@ -20,10 +20,6 @@
         {% for tag, count in tags %}
             {% if tag in down_tags %}
                 <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
-            {% elif tag in grace_tags %}
-                <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
-            {% else %}
-                <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
             {% endif %}
         {% endfor %}
     </div>
@@ -38,7 +34,7 @@
         {% include "front/my_checks_mobile.html" %}
         {% include "front/my_checks_desktop.html" %}
     {% else %}
-    <div class="alert alert-info">You don't have any checks yet.</div>
+    <div class="alert alert-info">You don't have any unresolved checks yet.</div>
     {% endif %}
     </div>
 </div>

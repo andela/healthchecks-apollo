@@ -564,22 +564,19 @@ def unresolved_issues(request):
     unresolved_checks = []
     for check in checks:
         status = check.get_status()
-        if check.last_ping:
-            if check.last_ping + check.timeout + check.grace < timezone.now():
-                unresolved_checks.append(check)
-                if status == "down":
-                    for tag in check.tags_list():
-                        if tag == "":
-                            continue
-                        counter[tag] += 1
-                        down_tags.add(tag)
+        if status == "down":
+            unresolved_checks.append(check)
+            for tag in check.tags_list():
+                if tag == "":
+                    continue
+                counter[tag] += 1
+                down_tags.add(tag)
     ctx = {
         "page": "unresolved",
         "checks": unresolved_checks,
         "now": timezone.now(),
         "tags": counter.most_common(),
         "down_tags": down_tags,
-        "grace_tags": grace_tags,
         "ping_endpoint": settings.PING_ENDPOINT
     }
 
