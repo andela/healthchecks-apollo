@@ -31,7 +31,6 @@ class Command(BaseCommand):
         periods = {'daily': 1, 'weekly': 7, 'monthly': 30}
         counter = 0
         for period in periods.items():
-            print(period)
             counter += self.num_reports_sent(period)
         return counter
 
