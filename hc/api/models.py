@@ -53,6 +53,7 @@ class Check(models.Model):
     n_pings = models.IntegerField(default=0)
     last_ping = models.DateTimeField(null=True, blank=True)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
+    next_nag = models.DateTimeField(null=True, blank=True, editable=False)
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
 
     def name_then_code(self):
