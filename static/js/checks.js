@@ -9,6 +9,11 @@ $(function () {
     var secsToText = function(total) {
         var remainingSeconds = Math.floor(total);
         var result = "";
+
+        if (total == 0) {
+            result = "None";
+        }
+
         for (var i=0, unit; unit=UNITS[i]; i++) {
             if (unit === WEEK && remainingSeconds % unit.nsecs != 0) {
                 // Say "8 days" instead of "1 week 1 day"
@@ -89,10 +94,10 @@ $(function () {
 
     var nagSlider = document.getElementById("nag-slider");
     noUiSlider.create(nagSlider, {
-        start: [20],
+        start: [0],
         connect: "lower",
         range: {
-            'min': [60, 60],
+            'min': [0, 0],
             '33%': [3600, 3600],
             '66%': [86400, 86400],
             '83%': [604800, 604800],
@@ -100,7 +105,7 @@ $(function () {
         },
         pips: {
             mode: 'values',
-            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            values: [0, 1800, 3600, 43200, 86400, 604800, 2592000],
             density: 4,
             format: {
                 to: secsToText,
