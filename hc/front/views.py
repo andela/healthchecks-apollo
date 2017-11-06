@@ -553,7 +553,6 @@ def privacy(request):
 def terms(request):
     return render(request, "front/terms.html", {})
 
-
 @login_required
 def unresolved_issues(request):
     q = Check.objects.filter(user=request.team.user).order_by("created")

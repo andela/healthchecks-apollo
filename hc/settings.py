@@ -99,9 +99,10 @@ if os.environ.get("TRAVIS") == "TRUE":
         }
     }
 else:
-    DATABASES = {
-        'default': dj_database_url.config()
-    }
+   DATABASES = {
+       'default': dj_database_url.config()
+   }
+
 
 
 LANGUAGE_CODE = 'en-us'
