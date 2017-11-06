@@ -52,7 +52,10 @@ class SendAlertsTestCase(BaseTestCase):
 
         # Expect no exceptions--
         Command().handle_one(check)
-        
+
         self.assertEqual(check.status, "down")
-        #TODO fix test below
-        #self.assertEqual(check.next_nag,  now + check.nag)
+
+        # Assert next next nag time is after 1 minute
+        self.assertAlmostEqual(
+            check.next_nag.timestamp(),
+            now.timestamp() + check.nag.total_seconds(), places=0)
