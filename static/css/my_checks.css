@@ -31,7 +31,11 @@
   background: #22bc66;
 }
 
-#grace-slider, #nag-slider {
+#grace-slider {
+    margin: 20px 50px 80px 50px;
+}
+
+#nag-slider {
     margin: 20px 50px 110px 50px;
 }
 
