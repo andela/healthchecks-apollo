@@ -4,7 +4,7 @@ import time
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
-from hc.accounts.models import Profile
+from hc.accounts.models import Profile, period
 from hc.api.models import Check
 
 
@@ -42,11 +42,11 @@ class Command(BaseCommand):
         q = Profile.objects.filter(report_due | report_not_scheduled)
         q = q.filter(reports_allowed=True)
         if period[0] == 'daily':
-            q = q.filter(report_period=2)
+            q = q.filter(report_period=period.daily.value)
         elif period[0] == 'weekly':
-            q = q.filter(report_period=1)
+            q = q.filter(report_period=period.weekly.value)
         elif period[0] == 'monthly':
-            q = q.filter(report_period=0)
+            q = q.filter(report_period=period.monthly.value)
         q = q.filter(user__date_joined__lt=period_before)
         sent = 0
         for profile in q:
