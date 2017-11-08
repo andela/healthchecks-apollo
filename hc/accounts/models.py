@@ -11,7 +11,13 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from hc.lib import emails
+from enum import Enum
 
+# Enumerate the report periods
+class period (Enum):
+    monthly = 0
+    weekly = 1
+    daily = 2
 
 class Profile(models.Model):
     # Owner:
@@ -57,11 +63,11 @@ class Profile(models.Model):
     def send_report(self):
         # reset next report date first:
         now = timezone.now()
-        if self.report_period == 0:  # monthly report
+        if self.report_period == period.monthly.value:  # monthly report
             self.next_report_date = now + timedelta(days=30)
-        elif self.report_period == 1:  # weekly report
+        elif self.report_period == period.weekly.value:  # weekly report
             self.next_report_date = now + timedelta(days=7)
-        elif self.report_period == 2:  # daily report
+        elif self.report_period == period.daily.value:  # daily report
             self.next_report_date = now + timedelta(days=1)
         self.save()
 
