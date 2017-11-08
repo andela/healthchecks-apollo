@@ -9,6 +9,7 @@ static-collected
 static/.DS_Store
 Tasklist
 venv/
+.env
 .idea/
 .env
 migrations/
