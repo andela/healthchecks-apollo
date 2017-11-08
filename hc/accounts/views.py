@@ -13,7 +13,7 @@ from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from hc.accounts.forms import (EmailPasswordForm, InviteTeamMemberForm,
                                RemoveTeamMemberForm, ReportSettingsForm,
-                               SetPasswordForm, TeamNameForm)
+                               SetPasswordForm, TeamNameForm, ReportConfigForm)
 from hc.accounts.models import Profile, Member
 from hc.api.models import Channel, Check
 from hc.lib.badges import get_badge_url
@@ -222,7 +222,9 @@ def profile(request):
         "badge_urls": badge_urls,
         "profile": profile,
         "period": periods[profile.report_period],
-        "show_api_key": show_api_key
+        "show_api_key": show_api_key,
+        "config_form": ReportConfigForm(initial={'report_period': profile.report_period,
+                                                 'reports_allowed': profile.reports_allowed})
     }
 
     return render(request, "accounts/profile.html", ctx)
