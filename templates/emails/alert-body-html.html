@@ -6,7 +6,8 @@
     This is a notification sent by <a href="https://healthchecks.io">healthchecks.io</a>.
     <br />
     The check <strong>{{ check.name_then_code }}</strong>
-    has gone <strong>{{ check.status|upper }}</strong>.
+    has gone <strong>{{ check.status|upper }}</strong>
+    {% if check.run_too_often %} {% if check.status == "down" %}and{% else %}but{% endif %} <strong>RUNS TOO OFTEN</strong>.{% else %}.{% endif %}
 </p>
 
 <p>Here is a summary of all your checks:</p>
