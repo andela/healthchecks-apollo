@@ -5,6 +5,7 @@ import json
 import requests
 from six.moves.urllib.parse import quote
 
+from hc.api.AfricasTalkingGateway import AfricasTalkingGateway, AfricasTalkingGatewayException
 from hc.lib import emails
 
 
@@ -61,7 +62,6 @@ class Email(Transport):
 
 
 class HttpTransport(Transport):
-
     def request(self, method, url, **kwargs):
         try:
             options = dict(kwargs)
@@ -216,3 +216,32 @@ class VictorOps(HttpTransport):
         }
 
         return self.post(self.channel.value, payload)
+
+
+class Sms(HttpTransport):
+    def notify(self, check):
+        # Import the helper gateway class
+
+        # Specify your login credentials
+        username = settings.SMS_USER_NAME
+        apikey = settings.SMS_API_KEY
+
+        text = tmpl("sms_message.html", check=check)
+
+        # Specify the numbers that you want to send to in a comma-separated list
+        # Please ensure you include the country code (+254 for Kenya)
+        to = "+" + self.channel.value
+
+        message = text
+
+        if settings.RUN_ENV == 'development':
+            gateway = AfricasTalkingGateway(username, apikey, "sandbox")
+        else:
+            gateway = AfricasTalkingGateway(username, apikey)
+
+        # Any gateway errors will be captured by our custom Exception class below,
+        # so wrap the call in a try-catch block
+        try:
+            results = gateway.sendMessage(to, message)
+        except AfricasTalkingGatewayException, e:
+            print 'Encountered an error while sending: %s' % str(e)
