@@ -25,20 +25,22 @@ def ping(request, code):
     now = timezone.now()
     sendAlert = False
 
-    if check.status in ("up"):
-        if check.last_ping + check.timeout - check.grace > now:
-            check.status = "early"
-            sendAlert = True
+    # If ping too early, set running too often
+    if check.last_ping and check.dont_ping_before and now < check.dont_ping_before:
+        check.run_too_often = True
+    else:
+        check.run_too_often = False
 
-    elif check.status in ("new", "paused", "early", "down"):
-        sendAlert = True
+    if check.status in ("new", "paused"):
         check.status = "up"
 
     check.last_ping = now
+    check.dont_ping_before = now + check.timeout - check.grace
 
     check.save()
     check.refresh_from_db()
-    if sendAlert:
+
+    if check.run_too_often:
         check.send_alert()
 
     ping = Ping(owner=check)
