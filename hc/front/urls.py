@@ -23,6 +23,7 @@ channel_urls = [
     url(r'^add_pushover/$', views.add_pushover, name="hc-add-pushover"),
     url(r'^add_victorops/$', views.add_victorops, name="hc-add-victorops"),
     url(r'^add_sms/$', views.add_sms, name="hc-add-sms"),
+    url(r'^add_telegram/$', views.add_telegram, name="hc-add-telegram"),
     url(r'^([\w-]+)/checks/$', views.channel_checks, name="hc-channel-checks"),
     url(r'^([\w-]+)/remove/$', views.remove_channel, name="hc-remove-channel"),
     url(r'^([\w-]+)/verify/([\w-]+)/$', views.verify_email,
