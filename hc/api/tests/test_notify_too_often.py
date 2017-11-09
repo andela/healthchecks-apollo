@@ -19,7 +19,7 @@ class FrequentPingTestCase(TestCase):
         self.assertEqual(200, r_2.status_code)
 
         self.check.refresh_from_db()
-        self.assertEqual("early", self.check.status)
+        self.assertTrue(self.check.run_too_often)
 
     def test_sends_ping(self):
         r = self.client.get("/ping/%s/" % self.check.code)
