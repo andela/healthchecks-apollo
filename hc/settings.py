@@ -132,9 +132,16 @@ STATICFILES_FINDERS = (
 
 COMPRESS_OFFLINE = True
 
+# SMS integration
 SMS_USER_NAME = os.getenv('SMS_USER_NAME')
 SMS_API_KEY = os.getenv('SMS_API_KEY')
 RUN_ENV = os.getenv('RUN_ENV')
+
+# Telegram integration
+TELEGRAM_API_ID = os.getenv('TELEGRAM_API_ID')
+TELEGRAM_API_HASH = os.getenv('TELEGRAM_API_HASH')
+TELEGRAM_API_PHONE = os.getenv('TELEGRAM_API_PHONE')
+
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
