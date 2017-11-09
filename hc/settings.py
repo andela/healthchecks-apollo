@@ -132,6 +132,9 @@ STATICFILES_FINDERS = (
 
 COMPRESS_OFFLINE = True
 
+SMS_USER_NAME = os.getenv('SMS_USER_NAME')
+SMS_API_KEY = os.getenv('SMS_API_KEY')
+RUN_ENV = os.getenv('RUN_ENV')
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
