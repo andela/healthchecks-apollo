@@ -22,12 +22,24 @@ def ping(request, code):
         return HttpResponseBadRequest()
 
     check.n_pings = F("n_pings") + 1
-    check.last_ping = timezone.now()
-    if check.status in ("new", "paused"):
+    now = timezone.now()
+    sendAlert = False
+
+    if check.status in ("up"):
+        if check.last_ping + check.timeout - check.grace > now:
+            check.status = "early"
+            sendAlert = True
+
+    elif check.status in ("new", "paused", "early", "down"):
+        sendAlert = True
         check.status = "up"
+
+    check.last_ping = now
 
     check.save()
     check.refresh_from_db()
+    if sendAlert:
+        check.send_alert()
 
     ping = Ping(owner=check)
     headers = request.META
