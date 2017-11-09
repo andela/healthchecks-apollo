@@ -27,6 +27,9 @@
             {% elif check.get_status == "down" %}
                 <span class="status icon-down"></span>
             {% endif %}
+            {% if check.run_too_often %}
+                <span class="status" title="Runs too often">&#10071;</span>
+            {% endif %}
         </td>
         <td class="name-cell">
             <div data-name="{{ check.name }}"
