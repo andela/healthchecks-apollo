@@ -548,7 +548,12 @@ def add_victorops(request):
 @login_required
 def add_sms(request):
     ctx = {"page": "channels"}
-    return render(request, "integrations/add_sms.html", ctx)
+    return render(request, "integrations/add_sms.html", ctx)\
+
+@login_required
+def add_telegram(request):
+    ctx = {"page": "channels"}
+    return render(request, "integrations/add_telegram.html", ctx)
 
 
 def privacy(request):
