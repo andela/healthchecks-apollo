@@ -545,6 +545,11 @@ def add_victorops(request):
     ctx = {"page": "channels"}
     return render(request, "integrations/add_victorops.html", ctx)
 
+@login_required
+def add_sms(request):
+    ctx = {"page": "channels"}
+    return render(request, "integrations/add_sms.html", ctx)
+
 
 def privacy(request):
     return render(request, "front/privacy.html", {})
