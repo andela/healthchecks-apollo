@@ -8,3 +8,4 @@ static-collected
 static/.DS_Store
 .env
 .idea/
+migrations/
