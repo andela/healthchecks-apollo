@@ -83,7 +83,7 @@ class Check(models.Model):
         return errors
 
     def get_status(self):
-        if self.status in ("new", "paused", "early"):
+        if self.status in ("new", "paused"):
             return self.status
 
         now = timezone.now()
