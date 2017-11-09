@@ -1,2 +1,2 @@
-{{ check.name_then_code }} is {{ check.status }}
+{{ check.name_then_code }} is {{ check.status }}{% if check.run_too_often %} {% if check.status == "down" %}and{% else %}but{% endif %} runs too often {% endif %}
 
