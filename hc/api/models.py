@@ -17,8 +17,7 @@ STATUSES = (
     ("up", "Up"),
     ("down", "Down"),
     ("new", "New"),
-    ("paused", "Paused"),
-    ("early", "Early")
+    ("paused", "Paused")
 )
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
@@ -51,6 +50,8 @@ class Check(models.Model):
     grace = models.DurationField(default=DEFAULT_GRACE)
     n_pings = models.IntegerField(default=0)
     last_ping = models.DateTimeField(null=True, blank=True)
+    dont_ping_before = models.DateTimeField(null=True, blank=True)
+    run_too_often = models.NullBooleanField(null=True, default=False)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
     status = models.CharField(max_length=6, choices=STATUSES, default="new")
 
@@ -70,7 +71,7 @@ class Check(models.Model):
         return "%s@%s" % (self.code, settings.PING_EMAIL_DOMAIN)
 
     def send_alert(self):
-        if self.status not in ("up", "down", "early"):
+        if self.status not in ("up", "down"):
             raise NotImplementedError("Unexpected status: %s" % self.status)
 
         errors = []
