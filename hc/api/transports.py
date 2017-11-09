@@ -5,7 +5,9 @@ import json
 import requests
 from six.moves.urllib.parse import quote
 
-from hc.api.AfricasTalkingGateway import AfricasTalkingGateway, AfricasTalkingGatewayException
+from telethon import TelegramClient
+
+from africastalking.AfricasTalkingGateway import (AfricasTalkingGateway, AfricasTalkingGatewayException)
 from hc.lib import emails
 
 
@@ -243,5 +245,25 @@ class Sms(HttpTransport):
         # so wrap the call in a try-catch block
         try:
             results = gateway.sendMessage(to, message)
-        except AfricasTalkingGatewayException, e:
-            print 'Encountered an error while sending: %s' % str(e)
+        except AfricasTalkingGatewayException as e:
+            print ('Encountered an error while sending: %s' % str(e))
+
+class Telegram(HttpTransport):
+    def notify(self, check):
+        api_id = settings.TELEGRAM_API_ID
+        api_hash = settings.TELEGRAM_API_HASH
+        phone = settings.TELEGRAM_API_PHONE
+
+        text = tmpl("sms_message.html", check=check)
+
+        try:
+            client = TelegramClient('session', api_id, api_hash)
+            #client.connect()
+            #client.sign_in(phone=phone)
+            #code = input()
+            #client.sign_in(code=code)
+            client.send_message(self.channel.value, text)
+            # client.log_out()
+            print ("message via telegram")
+        except Exception as ex:
+            print ("sending to telegram failed")
