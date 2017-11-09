@@ -65,6 +65,8 @@
                 <span class="badge up">UP</span>
             {% elif check.get_status == "down" %}
                 <span class="badge down">DOWN</span>
+            {% elif check.get_status == "early" %}
+                <span class="badge down">EARLY</span>
             {% endif %}
         </td>
         <td>
