@@ -5,7 +5,10 @@ import json
 import requests
 from six.moves.urllib.parse import quote
 
-from telethon import TelegramClient
+try:
+    from telethon import TelegramClient
+except:
+    pass
 
 from africastalking.AfricasTalkingGateway import (AfricasTalkingGateway, AfricasTalkingGatewayException)
 from hc.lib import emails
