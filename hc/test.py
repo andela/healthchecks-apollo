@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TransactionTestCase
 
 from hc.accounts.models import Member, Profile
 
 
-class BaseTestCase(TestCase):
+class BaseTestCase(TransactionTestCase):
 
     def setUp(self):
         super(BaseTestCase, self).setUp()

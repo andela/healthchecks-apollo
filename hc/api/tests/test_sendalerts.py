@@ -40,3 +40,22 @@ class SendAlertsTestCase(BaseTestCase):
         Command().handle_one(check)
 
     ### Assert when Command's handle many that when handle_many should return True
+
+    def test_it_handles_nag_period(self):
+        check = Check(user=self.alice, status="up")
+        # 1 day 65 minutes after ping the check is past grace period:
+        now = timezone.now()
+        check.last_ping = now - timedelta(days=1, minutes=65)
+        # nag after 1 min
+        check.nag = timedelta(minutes=1)
+        check.save()
+
+        time_passed = now + check.nag
+
+        # Expect no exceptions--
+        Command().handle_one(check)
+
+        self.assertEqual(check.status, "down")
+
+        # Assert next next nag time is after 1 minute
+        self.assertEqual(check.next_nag.minute, time_passed.minute)
