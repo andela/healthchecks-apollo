@@ -13,7 +13,7 @@ from django.http import HttpResponseForbidden, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from hc.accounts.forms import (EmailPasswordForm, InviteTeamMemberForm,
                                RemoveTeamMemberForm, ReportSettingsForm,
-                               SetPasswordForm, TeamNameForm)
+                               SetPasswordForm, TeamNameForm, ReportConfigForm)
 from hc.accounts.models import Profile, Member
 from hc.api.models import Channel, Check
 from hc.lib.badges import get_badge_url
@@ -153,9 +153,16 @@ def profile(request):
             messages.info(request, "The API key has been revoked!")
         elif "show_api_key" in request.POST:
             show_api_key = True
-        elif "update_reports_allowed" in request.POST:
+        elif "update_reports" in request.POST:
             form = ReportSettingsForm(request.POST)
             if form.is_valid():
+                period = form.cleaned_data["report_period"]
+                if period is None:
+                    # here is when the user does not select a period in the config dialog, put monthly reports, the
+                    # default
+                    profile.report_period = 0
+                else:
+                    profile.report_period = period
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
                 profile.save()
                 messages.success(request, "Your settings have been updated!")
@@ -209,11 +216,15 @@ def profile(request):
 
         badge_urls.append(get_badge_url(username, tag))
 
+    periods = ['Monthly', 'Weekly', 'Daily']
     ctx = {
         "page": "profile",
         "badge_urls": badge_urls,
         "profile": profile,
-        "show_api_key": show_api_key
+        "period": periods[profile.report_period],
+        "show_api_key": show_api_key,
+        "config_form": ReportConfigForm(initial={'report_period': profile.report_period,
+                                                 'reports_allowed': profile.reports_allowed})
     }
 
     return render(request, "accounts/profile.html", ctx)

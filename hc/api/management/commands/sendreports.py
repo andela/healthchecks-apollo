@@ -4,19 +4,19 @@ import time
 from django.core.management.base import BaseCommand
 from django.db.models import Q
 from django.utils import timezone
-from hc.accounts.models import Profile
+from hc.accounts.models import Profile, period
 from hc.api.models import Check
 
 
 def num_pinged_checks(profile):
-    q = Check.objects.filter(user_id=profile.user.id,)
+    q = Check.objects.filter(user_id=profile.user.id, )
     q = q.filter(last_ping__isnull=False)
     return q.count()
 
 
 class Command(BaseCommand):
-    help = 'Send due monthly reports'
-    tmpl = "Sending monthly report to %s"
+    help = 'Sending due reports'
+    tmpl = "Sending {0} report to {1}"
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -28,22 +28,32 @@ class Command(BaseCommand):
         )
 
     def handle_one_run(self):
-        now = timezone.now()
-        month_before = now - timedelta(days=30)
+        periods = {'daily': 1, 'weekly': 7, 'monthly': 30}
+        counter = 0
+        for period in periods.items():
+            counter += self.num_reports_sent(period)
+        return counter
 
+    def num_reports_sent(self, period):
+        now = timezone.now()
+        period_before = now - timedelta(days=period[1])
         report_due = Q(next_report_date__lt=now)
         report_not_scheduled = Q(next_report_date__isnull=True)
-
         q = Profile.objects.filter(report_due | report_not_scheduled)
         q = q.filter(reports_allowed=True)
-        q = q.filter(user__date_joined__lt=month_before)
+        if period[0] == 'daily':
+            q = q.filter(report_period=period.daily.value)
+        elif period[0] == 'weekly':
+            q = q.filter(report_period=period.weekly.value)
+        elif period[0] == 'monthly':
+            q = q.filter(report_period=period.monthly.value)
+        q = q.filter(user__date_joined__lt=period_before)
         sent = 0
         for profile in q:
             if num_pinged_checks(profile) > 0:
-                self.stdout.write(self.tmpl % profile.user.email)
+                self.stdout.write(self.tmpl.format(period[0], profile.user.email))
                 profile.send_report()
                 sent += 1
-
         return sent
 
     def handle(self, *args, **options):

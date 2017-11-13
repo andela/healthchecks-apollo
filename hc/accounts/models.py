@@ -11,7 +11,13 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from hc.lib import emails
+from enum import Enum
 
+# Enumerate the report periods
+class period (Enum):
+    monthly = 0
+    weekly = 1
+    daily = 2
 
 class Profile(models.Model):
     # Owner:
@@ -20,6 +26,7 @@ class Profile(models.Model):
     team_access_allowed = models.BooleanField(default=False)
     next_report_date = models.DateTimeField(null=True, blank=True)
     reports_allowed = models.BooleanField(default=True)
+    report_period = models.SmallIntegerField(default=0)
     ping_log_limit = models.IntegerField(default=100)
     token = models.CharField(max_length=128, blank=True)
     api_key = models.CharField(max_length=128, blank=True)
@@ -56,17 +63,23 @@ class Profile(models.Model):
     def send_report(self):
         # reset next report date first:
         now = timezone.now()
-        self.next_report_date = now + timedelta(days=30)
+        if self.report_period == period.monthly.value:  # monthly report
+            self.next_report_date = now + timedelta(days=30)
+        elif self.report_period == period.weekly.value:  # weekly report
+            self.next_report_date = now + timedelta(days=7)
+        elif self.report_period == period.daily.value:  # daily report
+            self.next_report_date = now + timedelta(days=1)
         self.save()
 
         token = signing.Signer().sign(uuid.uuid4())
         path = reverse("hc-unsubscribe-reports", args=[self.user.username])
         unsub_link = "%s%s?token=%s" % (settings.SITE_ROOT, path, token)
-
+        periods = ['Monthly', 'Weekly', 'Daily']
         ctx = {
             "checks": self.user.check_set.order_by("created"),
             "now": now,
-            "unsub_link": unsub_link
+            "unsub_link": unsub_link,
+            "period": periods[self.report_period]
         }
 
         emails.report(self.user.email, ctx)
