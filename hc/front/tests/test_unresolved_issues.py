@@ -40,3 +40,9 @@ class UnresolvedIssuesTestCase(BaseTestCase):
         r = self.client.get("/unresolved/")
 
         self.assertContains(r, "Alice Was Here")
+
+    def test_unresolved_issues_check_tags(self):
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.get("/unresolved/")
+
+        self.assertContains(r, "down")
