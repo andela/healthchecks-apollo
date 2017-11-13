@@ -24,7 +24,7 @@ DEFAULT_GRACE = td(hours=1)
 CHANNEL_KINDS = (("email", "Email"), ("webhook", "Webhook"),
                  ("hipchat", "HipChat"),
                  ("slack", "Slack"), ("pd", "PagerDuty"), ("po", "Pushover"),
-                 ("victorops", "VictorOps"))
+                 ("victorops", "VictorOps"), ("sms", "Sms"), ("telegram", "Telegram"))
 
 PO_PRIORITIES = {
     -2: "lowest",
@@ -36,7 +36,6 @@ PO_PRIORITIES = {
 
 
 class Check(models.Model):
-
     class Meta:
         # sendalerts command will query using these
         index_together = ["status", "user", "alert_after"]
@@ -183,6 +182,10 @@ class Channel(models.Model):
             return transports.Pushbullet(self)
         elif self.kind == "po":
             return transports.Pushover(self)
+        elif self.kind == "sms":
+            return transports.Sms(self)
+        elif self.kind == "telegram":
+            return transports.Telegram(self)
         else:
             raise NotImplementedError("Unknown channel kind: %s" % self.kind)
 

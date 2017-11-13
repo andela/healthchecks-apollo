@@ -34,6 +34,8 @@
             {% if ch.kind == "pd" %} PagerDuty {% endif %}
             {% if ch.kind == "po" %} Pushover {% endif %}
             {% if ch.kind == "victorops" %} VictorOps {% endif %}
+            {% if ch.kind == "sms" %} Sms {% endif %}
+            {% if ch.kind == "telegram" %} Telegram {% endif %}
             {% if ch.kind == "pushbullet" %} Pushbullet {% endif %}
             </td>
             <td class="value-cell">
@@ -178,6 +180,24 @@
             <p>On-call scheduling, alerting, and incident tracking.</p>
 
             <a href="{% url 'hc-add-victorops' %}" class="btn btn-primary">Add Integration</a>
+        </li>
+        <li>
+            <img src="{% static 'img/integrations/sms.png' %}"
+                class="icon" alt="VictorOps icon" />
+
+            <h2>SMS</h2>
+            <p>Receive instant sms notifications on your phone.</p>
+
+            <a href="{% url 'hc-add-sms' %}" class="btn btn-primary">Add Integration</a>
+        </li>
+        <li>
+            <img src="{% static 'img/integrations/tg_logo.png' %}"
+                class="icon" alt="VictorOps icon" />
+
+            <h2>Telegram</h2>
+            <p>Receive instant telegram notifications on your phone.</p>
+
+            <a href="{% url 'hc-add-telegram' %}" class="btn btn-primary">Add Integration</a>
         </li>
         {% if enable_pushbullet %}
         <li>
