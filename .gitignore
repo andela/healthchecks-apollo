@@ -2,9 +2,10 @@ __pycache__/
 *.pyc
 .coverage
 hc.sqlite
+.vscode/
 hc/local_settings.py
 static-collected
 .DS_Store
 static/.DS_Store
-.env
 .idea/
+.env
