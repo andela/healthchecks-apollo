@@ -6,6 +6,15 @@
 
 {% block content %}
 <div class="row">
+
+    {% if messages %}
+    <div class="col-sm-12">
+        {% for message in messages %}
+        <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="col-sm-12">
         <h1>
         {% if request.team == request.user.profile %}
@@ -32,7 +41,6 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-
 
     {% if checks %}
         {% include "front/my_checks_mobile.html" %}
