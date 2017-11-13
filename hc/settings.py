@@ -103,8 +103,6 @@ else:
        'default': dj_database_url.config()
    }
 
-
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
